@@ -1,0 +1,4 @@
+#pragma once
+
+#define PMBUS_TOOL_BUILD_VERSION L"1.0.0.264"
+#define PMBUS_TOOL_BUILD_TIME L"2026-07-09 16:52:55"
