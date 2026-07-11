@@ -6,7 +6,8 @@ The tool connects to an M032 EVB USB HID bridge, uses the EVB I2C controller as 
 
 ## Current Scope
 
-- Bridge board: M032 EVB running the existing PMBus/SMBus HID bridge firmware.
+- Primary verified bridge board: M032 EVB running the existing PMBus/SMBus HID bridge firmware.
+- Staged bridge board firmware: M261 EVB / M263KIAAE reference firmware is present under `demo_code\M261BSP_USB_HID_PMBus_SMBus` with HID IAP bootloader, application checksum post-build, and M261 I2C backend for follow-up hardware validation.
 - Target bus role: PMBus master only.
 - UI flow: scan USB, connect HID bridge, press `Start`, poll and display values.
 - Main dashboard: M-CRPS 12V output voltage/current/power, RPM, VIN/PIN/POUT, temperatures, protection thresholds, status, identity, and MFR fields.
@@ -19,6 +20,24 @@ Out of V1 scope:
 - Calibration, EEP writes, target firmware update, or MFR firmware upload.
 - Destructive MFR flows such as blackbox clear or write/readback validation.
 
+## Bridge Firmware
+
+This workspace now carries the same bridge firmware source layout used by `simple_pmbus_smbus_tool`:
+
+- M031/M032 bridge firmware: `demo_code\M031BSP_USB_HID_PMBus_SMBus`
+- M261 staged bridge firmware: `demo_code\M261BSP_USB_HID_PMBus_SMBus`
+
+Both firmware folders use a USB HID IAP bootloader plus application split for bridge self-update:
+
+- Bootloader HID PID: `0x3F00`
+- Application HID PID: `0x5020`
+- M031/M032 app base: `0x00004000`, CRC word at `0x0001FFFC`
+- M261 app base: `0x00010000`, CRC word at `0x0007FFFC`
+
+The bootloader is only for updating the bridge application image. It does not implement target-board firmware upload. Use the sibling `simple_programming_tool` after the board is already in HID ISP bootloader mode.
+
+The top-level GUI includes `Return Bootloader`. It sends `BRIDGE_CMD_ENTER_IAP` (`0x04`) to the running bridge application, erases only the application CRC word, disconnects from the app HID device, and resets through the bootloader path. After the bootloader enumerates as `VID 0x0416`, `PID 0x3F00`, use `simple_programming_tool` to program a valid padded bridge application image. This button is an app-side bridge self-update entry point; it is not a target-board programming flow.
+
 ## Defaults
 
 - Bridge VID/PID: `0x0416 / 0x5020`
@@ -30,6 +49,8 @@ Out of V1 scope:
 - Output mode: `M-CRPS 12V output`
 
 The V1 M-CRPS dashboard keeps PMBus `PAGE` handling profile-neutral. Page-specific output display should be enabled only after a product profile defines the page-to-output mapping.
+
+For first M261 validation, use the default `I2C0 PB.4=SDA / PB.5=SCL` pin pair. The M261 firmware backend follows the `simple_pmbus_smbus_tool` M261 pin support; a dedicated GUI board profile selector is still a follow-up item for this dashboard tool.
 
 ## Polling Commands
 

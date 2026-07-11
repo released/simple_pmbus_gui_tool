@@ -29,6 +29,7 @@ protected:
     afx_msg void OnRefreshDevices();
     afx_msg void OnConnect();
     afx_msg void OnDisconnect();
+    afx_msg void OnReturnBootloader();
     afx_msg void OnStart();
     afx_msg void OnStop();
     afx_msg void OnClearLog();
@@ -79,6 +80,7 @@ private:
     CButton disconnect_btn_;
     CButton start_btn_;
     CButton stop_btn_;
+    CButton return_bootloader_btn_;
     CStatic status_chip_;
 
     CStatic vid_label_;

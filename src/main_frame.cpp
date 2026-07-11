@@ -23,6 +23,7 @@ enum : UINT {
     IDC_HEC_DISCONNECT_BTN,
     IDC_HEC_START_BTN,
     IDC_HEC_STOP_BTN,
+    IDC_HEC_RETURN_BOOTLOADER_BTN,
     IDC_HEC_STATUS_CHIP,
     IDC_HEC_VID_LABEL,
     IDC_HEC_VID_EDIT,
@@ -91,6 +92,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
     ON_BN_CLICKED(IDC_HEC_SCAN_BTN, &CMainFrame::OnRefreshDevices)
     ON_BN_CLICKED(IDC_HEC_CONNECT_BTN, &CMainFrame::OnConnect)
     ON_BN_CLICKED(IDC_HEC_DISCONNECT_BTN, &CMainFrame::OnDisconnect)
+    ON_BN_CLICKED(IDC_HEC_RETURN_BOOTLOADER_BTN, &CMainFrame::OnReturnBootloader)
     ON_BN_CLICKED(IDC_HEC_START_BTN, &CMainFrame::OnStart)
     ON_BN_CLICKED(IDC_HEC_STOP_BTN, &CMainFrame::OnStop)
     ON_BN_CLICKED(IDC_HEC_CLEAR_LOG, &CMainFrame::OnClearLog)
@@ -141,6 +143,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct) {
     if (!create_or_fail(disconnect_btn_.Create(L"Disconnect", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(), this, IDC_HEC_DISCONNECT_BTN), L"disconnect")) return -1;
     if (!create_or_fail(start_btn_.Create(L"Start", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(), this, IDC_HEC_START_BTN), L"start")) return -1;
     if (!create_or_fail(stop_btn_.Create(L"Stop", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(), this, IDC_HEC_STOP_BTN), L"stop")) return -1;
+    if (!create_or_fail(return_bootloader_btn_.Create(L"Return Bootloader", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, CRect(), this, IDC_HEC_RETURN_BOOTLOADER_BTN), L"return bootloader")) return -1;
     if (!create_or_fail(status_chip_.Create(L"Disconnected", WS_CHILD | WS_VISIBLE | SS_CENTER | SS_CENTERIMAGE, CRect(), this, IDC_HEC_STATUS_CHIP), L"status")) return -1;
 
     if (!create_or_fail(vid_label_.Create(L"VID", WS_CHILD | WS_VISIBLE, CRect(), this, IDC_HEC_VID_LABEL), L"VID label")) return -1;
@@ -253,8 +256,8 @@ void CMainFrame::RecreateUiFont() {
 }
 
 void CMainFrame::ApplyTopControlFont() {
-    const std::array<CWnd*, 38> controls = {
-        &scan_btn_, &device_combo_, &connect_btn_, &disconnect_btn_, &start_btn_, &stop_btn_, &status_chip_,
+    const std::array<CWnd*, 39> controls = {
+        &scan_btn_, &device_combo_, &connect_btn_, &disconnect_btn_, &start_btn_, &stop_btn_, &return_bootloader_btn_, &status_chip_,
         &vid_label_, &vid_edit_, &pid_label_, &pid_edit_, &timeout_label_, &timeout_edit_, &addr_label_,
         &addr_edit_, &pin_label_, &pin_combo_, &speed_label_, &speed_combo_, &interval_label_, &interval_edit_,
         &rail_label_, &rail_combo_, &pec_check_, &manufacturer_label_, &manufacturer_edit_, &product_label_,
@@ -281,23 +284,32 @@ void CMainFrame::LayoutControls(int cx, int cy) {
     const int label_y_pad = dpi.Scale(4);
     const int btn_w = dpi.Scale(116);
     const int small_w = dpi.Scale(76);
+    const int connect_w = btn_w + dpi.Scale(12);
+    const int disconnect_w = btn_w;
+    const int start_w = dpi.Scale(82);
+    const int stop_w = dpi.Scale(82);
+    const int return_w = (std::max)(btn_w + dpi.Scale(36), mfc_tool::ui::MeasureButtonMinWidth(return_bootloader_btn_));
+    const int status_min_w = dpi.Scale(120);
     int x = margin;
     int y = margin;
 
     mfc_tool::ui::SafeMoveWindow(scan_btn_, x, y, btn_w + dpi.Scale(16), row_h);
     x += btn_w + dpi.Scale(16) + gap;
-    const int device_combo_w = (std::max)(dpi.Scale(240), cx - x - margin - (btn_w * 4 + gap * 4 + dpi.Scale(120)));
+    const int action_w = connect_w + disconnect_w + start_w + stop_w + return_w + status_min_w + gap * 6;
+    const int device_combo_w = (std::max)(dpi.Scale(220), cx - x - margin - action_w);
     mfc_tool::ui::SafeMoveWindow(device_combo_, x, y, device_combo_w, row_h + m.comboDrop120);
     x += device_combo_w + gap;
-    mfc_tool::ui::SafeMoveWindow(connect_btn_, x, y, btn_w + dpi.Scale(12), row_h);
-    x += btn_w + dpi.Scale(12) + gap;
-    mfc_tool::ui::SafeMoveWindow(disconnect_btn_, x, y, btn_w, row_h);
-    x += btn_w + gap;
-    mfc_tool::ui::SafeMoveWindow(start_btn_, x, y, dpi.Scale(82), row_h);
-    x += dpi.Scale(82) + gap;
-    mfc_tool::ui::SafeMoveWindow(stop_btn_, x, y, dpi.Scale(82), row_h);
-    x += dpi.Scale(82) + gap;
-    mfc_tool::ui::SafeMoveWindow(status_chip_, x, y, cx - x - margin, row_h);
+    mfc_tool::ui::SafeMoveWindow(connect_btn_, x, y, connect_w, row_h);
+    x += connect_w + gap;
+    mfc_tool::ui::SafeMoveWindow(disconnect_btn_, x, y, disconnect_w, row_h);
+    x += disconnect_w + gap;
+    mfc_tool::ui::SafeMoveWindow(start_btn_, x, y, start_w, row_h);
+    x += start_w + gap;
+    mfc_tool::ui::SafeMoveWindow(stop_btn_, x, y, stop_w, row_h);
+    x += stop_w + gap;
+    mfc_tool::ui::SafeMoveWindow(return_bootloader_btn_, x, y, return_w, row_h);
+    x += return_w + gap;
+    mfc_tool::ui::SafeMoveWindow(status_chip_, x, y, (std::max)(status_min_w, cx - x - margin), row_h);
 
     y += row_h + gap;
     x = margin;
@@ -439,6 +451,38 @@ void CMainFrame::OnDisconnect() {
     AppendLog(L"HID bridge disconnected.");
 }
 
+void CMainFrame::OnReturnBootloader() {
+    if (!service_.IsConnected()) {
+        ShowErrorBox(L"Return Bootloader", L"Connect HID bridge before returning to bootloader.");
+        return;
+    }
+
+    const int confirm = ::MessageBoxW(
+        m_hWnd,
+        L"This will invalidate the bridge application CRC and reboot the board into USB HID ISP bootloader mode.\n\n"
+        L"If programming is canceled after this step, the board will stay in bootloader mode until a valid app image is programmed.\n\n"
+        L"Continue?",
+        L"Return Bootloader",
+        MB_ICONWARNING | MB_YESNO | MB_DEFBUTTON2);
+    if (confirm != IDYES) {
+        return;
+    }
+
+    try {
+        OnStop();
+        service_.EnterIap();
+        AppendLog(L"Return Bootloader command sent. Wait for bootloader HID PID 0x3F00, then use simple_programming_tool.");
+        service_.Disconnect();
+        SetConnectionUi(false);
+        SetRunningUi(false);
+        UpdateDeviceMetaUi();
+        RefreshDevices();
+    } catch (const std::exception& e) {
+        ShowErrorBox(L"Return Bootloader Error", AnsiToWide(e.what()));
+        AppendLog(L"Return Bootloader failed: " + AnsiToWide(e.what()));
+    }
+}
+
 void CMainFrame::OnStart() {
     if (!service_.IsConnected()) {
         ShowErrorBox(L"Start", L"Connect HID bridge before Start.");
@@ -484,6 +528,7 @@ void CMainFrame::SetConnectionUi(bool connected) {
     mfc_tool::ui::SafeEnableWindow(connect_btn_, !connected);
     mfc_tool::ui::SafeEnableWindow(disconnect_btn_, connected);
     mfc_tool::ui::SafeEnableWindow(start_btn_, connected && !poller_.IsRunning());
+    mfc_tool::ui::SafeEnableWindow(return_bootloader_btn_, connected && !poller_.IsRunning());
     mfc_tool::ui::SafeEnableWindow(scan_btn_, !connected);
     mfc_tool::ui::SafeEnableWindow(device_combo_, !connected);
     UpdateStatusChip(connected ? L"Connected" : L"Disconnected", connected ? RGB(46, 139, 87) : RGB(95, 104, 117));
@@ -492,6 +537,7 @@ void CMainFrame::SetConnectionUi(bool connected) {
 void CMainFrame::SetRunningUi(bool running) {
     mfc_tool::ui::SafeEnableWindow(start_btn_, service_.IsConnected() && !running);
     mfc_tool::ui::SafeEnableWindow(stop_btn_, running);
+    mfc_tool::ui::SafeEnableWindow(return_bootloader_btn_, service_.IsConnected() && !running);
     mfc_tool::ui::SafeEnableWindow(disconnect_btn_, service_.IsConnected());
     mfc_tool::ui::SafeEnableWindow(addr_edit_, !running);
     mfc_tool::ui::SafeEnableWindow(pin_combo_, !running);
