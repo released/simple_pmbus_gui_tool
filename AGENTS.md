@@ -1,5 +1,11 @@
 # AGENTS.md
 
+## Layout And Clean Contract
+
+- Existing src/scripts/docs/build layout is already conforming; do not move working application/firmware modules for cosmetics.
+- Normal clean uses scripts/clean_intermediates.ps1: preflight all paths/reparse points, delete only allowlisted compiler files, never recursively purge folders by name. Preserve EXE/INI/DLL/firmware/data/log/evidence/unknown content even in obj/tests/verify/x64/CMakeFiles.
+- Codex automatically verifies actual clean plus nested-delivery/idempotence/junction fixtures; no manual setup is assigned to the user.
+
 ## Project Purpose
 
 This project builds a native Windows MFC end-user PMBus dashboard tool.

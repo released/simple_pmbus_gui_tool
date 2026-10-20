@@ -4,8 +4,8 @@
 IDR_MAINFRAME ICON "res\\p_tool.ico"
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,265
- PRODUCTVERSION 1,0,0,265
+ FILEVERSION 1,0,0,266
+ PRODUCTVERSION 1,0,0,266
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS VS_FF_DEBUG
@@ -22,11 +22,11 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "PMBus GUI tool Team\0"
             VALUE "FileDescription", "PMBus GUI tool\0"
-            VALUE "FileVersion", "1.0.0.265\0"
+            VALUE "FileVersion", "1.0.0.266\0"
             VALUE "InternalName", "PmbusGuiTool.exe\0"
             VALUE "OriginalFilename", "PmbusGuiTool.exe\0"
             VALUE "ProductName", "PMBus GUI tool\0"
-            VALUE "ProductVersion", "1.0.0.265\0"
+            VALUE "ProductVersion", "1.0.0.266\0"
         END
     END
     BLOCK "VarFileInfo"

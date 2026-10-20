@@ -2,6 +2,17 @@
 
 Allowed result values: `PASS`, `FAIL`, `NOT RUN`, `N/A`.
 
+## Layout / Clean Audit 2026-10-20
+
+- Existing source layout already conforms; no application/protocol/firmware restructuring or dependencies were introduced.
+- Replaced broad directory deletion with standalone `scripts/clean_intermediates.ps1`; batch compatibility remains.
+- Build: PASS: scripts/build_mfc.ps1 -Configuration Release -Platform x64 -CloseRunningTool $false; 0 warnings/errors; normal generated version 1.0.0.266.
+- Runtime: PASS: isolated captioned main frame/startup/normal close, exit 0; no connection/write.
+- PASS: shared verifier `-CleanBatch scripts/clean_mfc.bat -CleanActualProject -CheckNestedDelivery -CheckReparseRejection`; 17 protected fixture build files plus source retained, object fixture removed, repeat-clean and pre-deletion junction rejection PASS. 2 actual protected build files unchanged (SHA-256).
+- The initial expanded audit classified MSBuild `obj/*.recipe` compiler metadata as protected and reported FAIL; the classification was corrected against Microsoft.CppBuild.targets (DesktopDeployRecipeFile), then the audit passed. No delivery EXE was deleted.
+- NOT RUN: physical hardware/firmware workflows, complete GUI/DPI, new Debug acceptance. Publication only updates already tracked deliverables; private INIs/data/logs and newly built test EXEs are excluded.
+- Final commit/push state: workspace `#READ_ME_FIRST#/PROJECT_LAYOUT_MIGRATION.md`.
+
 ## Build / Output
 
 [BLD-01] Release x64 build

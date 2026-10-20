@@ -4,6 +4,15 @@ Native Windows MFC PMBus dashboard for end users.
 
 The tool connects to an M032 EVB USB HID bridge, uses the EVB I2C controller as a PMBus master, and displays decoded PMBus/M-CRPS read-only values in a dashboard UI.
 
+## Layout And Safe Clean
+
+Application source remains in `src`, automation in `scripts`, supporting guides
+in `docs`, and delivery/runtime files in `build`. Existing firmware/vendor
+trees retain their working paths. `scripts/clean_mfc.bat` removes allowlisted
+compiler files only, rejects reparse-point traversal before deletion, and
+retains EXE/INI/DLL/data/log/unknown files even inside nested output folders.
+A folder name such as `tests` or `obj` is not permission to erase its contents.
+
 ## Current Scope
 
 - Primary verified bridge board: M032 EVB running the existing PMBus/SMBus HID bridge firmware.
