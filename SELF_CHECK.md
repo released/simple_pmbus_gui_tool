@@ -2,6 +2,37 @@
 
 Allowed result values: `PASS`, `FAIL`, `NOT RUN`, `N/A`.
 
+## Verified x64 EXE slimming 2026-10-25
+
+- PASS comparable Release baseline 2850816 bytes (original 2850816);
+  formal 729088 bytes, SHA 7322BB0AF031F3728C9D3257E0B6A3D53F5C8166F26EE5BC1121CF06A8E1ACDB.
+- PASS scripts/build_mfc.ps1 -Configuration Release -Platform x64 -CloseRunningTool $false; isolated Debug with version prebuild disabled.
+  No compiler/linker warnings/errors reported.
+- PASS actual formal hash-matched fresh fixtures: controls/UI dispatch (no file-dialog workflow),
+  identical child-control class counts, assertion-free Debug and normal exit 0.
+  No personal INI, Connect, protocol command, flash or clipboard action.
+- Initial dialog-test IDs 1022/13161 were invalid for this dashboard UI; those
+  failures were test configuration errors. The active dashboard has no corresponding
+  disconnected file-load control. Final startup/control/Debug checks omit that test.
+- PASS /O2 /GL /MT /GS and PE 0x8160 retained; VisualManager RTTI absent,
+  no new DLL runtime; x64 macro only. Application/protocol/firmware sources unchanged.
+- PASS performance: two warmups, baseline calibration before Release candidate,
+  5 alternating AB/BA pairs without concurrent compilation. Predeclared delta
+  max(floor, 10% baseline median, 3*MAD); memory 5%; floors startup25/UI2/CPU16ms,
+  memory1MiB. Results (baseline -> candidate; acceptance limit):
+  - StartupMs: 467.0350 -> 409.6745; 1092.0350.
+  - PeakBytes: 19410944.0000 -> 18931712.0000; 20459520.0000.
+  - CpuMs: 312.5000 -> 328.1250; 406.5000.
+  - WorkflowMs: 1.0603 -> 1.8588; 3.0603.
+- Raw samples/limits and earlier failed timing where applicable:
+  docs/verification/exe-slimming-20261025.json.
+- PASS actual clean_mfc.bat removed 34 compiler files, all 2 protected actual
+  files SHA unchanged; 17 nested fixture files/source, help/idempotence PASS.
+  Prior unchanged junction-rejection evidence reused; root INI hashes preserved.
+- NOT RUN: physical-device/protocol throughput, unrelated firmware, visual/DPI,
+  clean-PC, Win32. Ignored EXE is not force-added to Git.
+
+
 ## Layout / Clean Audit 2026-10-20
 
 - Existing source layout already conforms; no application/protocol/firmware restructuring or dependencies were introduced.

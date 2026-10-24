@@ -1,0 +1,186 @@
+{
+  "Date": "2026-10-25",
+  "Target": "Release|x64",
+  "Toolchain": "MSVC 14.44.35207",
+  "OriginalExeBytes": 2850816,
+  "BaselineBytes": 2850816,
+  "FormalBytes": 729088,
+  "BaselineSHA256": "512800B22D51EA224E754BF124B166997A27E3A22CF9B68E82B540A0D04B659D",
+  "FormalSHA256": "7322BB0AF031F3728C9D3257E0B6A3D53F5C8166F26EE5BC1121CF06A8E1ACDB",
+  "RequiredFiles": [
+    "PmbusGuiTool.exe"
+  ],
+  "DeliveryBeforeBytes": 2850816,
+  "DeliveryAfterBytes": 729088,
+  "Samples": 5,
+  "Order": "baseline calibration before candidate; alternating AB/BA measured pairs",
+  "Limits": {
+    "StartupMs": {
+      "Median": 652.7651000000001,
+      "MAD": 208.37270000000007,
+      "AllowedDelta": 625
+    },
+    "PeakBytes": {
+      "Median": 19415040,
+      "MAD": 8192,
+      "AllowedDelta": 1048576
+    },
+    "CpuMs": {
+      "Median": 312.5,
+      "MAD": 31.25,
+      "AllowedDelta": 94
+    },
+    "WorkflowMs": {
+      "Median": 1.6019,
+      "MAD": 0.4001000000000001,
+      "AllowedDelta": 2
+    }
+  },
+  "Checks": [
+    {
+      "Metric": "StartupMs",
+      "BaselineMedian": 467.035,
+      "CandidateMedian": 409.6745,
+      "Limit": 1092.035,
+      "Pass": true
+    },
+    {
+      "Metric": "PeakBytes",
+      "BaselineMedian": 19410944,
+      "CandidateMedian": 18931712,
+      "Limit": 20459520,
+      "Pass": true
+    },
+    {
+      "Metric": "CpuMs",
+      "BaselineMedian": 312.5,
+      "CandidateMedian": 328.125,
+      "Limit": 406.5,
+      "Pass": true
+    },
+    {
+      "Metric": "WorkflowMs",
+      "BaselineMedian": 1.0603,
+      "CandidateMedian": 1.8588,
+      "Limit": 3.0603,
+      "Pass": true
+    }
+  ],
+  "Calibration": [
+    {
+      "StartupMs": 652.7651000000001,
+      "WorkflowMs": 2.3895,
+      "CpuMs": 531.25,
+      "PeakBytes": 19423232
+    },
+    {
+      "StartupMs": 738.8704,
+      "WorkflowMs": 1.9157000000000002,
+      "CpuMs": 390.625,
+      "PeakBytes": 19394560
+    },
+    {
+      "StartupMs": 938.3083,
+      "WorkflowMs": 1.059,
+      "CpuMs": 312.5,
+      "PeakBytes": 19378176
+    },
+    {
+      "StartupMs": 399.2672,
+      "WorkflowMs": 1.2018,
+      "CpuMs": 281.25,
+      "PeakBytes": 19415040
+    },
+    {
+      "StartupMs": 444.3924,
+      "WorkflowMs": 1.6019,
+      "CpuMs": 312.5,
+      "PeakBytes": 19423232
+    }
+  ],
+  "Baseline": [
+    {
+      "StartupMs": 394.8387,
+      "WorkflowMs": 1.0603,
+      "CpuMs": 265.625,
+      "PeakBytes": 19415040
+    },
+    {
+      "StartupMs": 467.035,
+      "WorkflowMs": 1.7028,
+      "CpuMs": 312.5,
+      "PeakBytes": 19447808
+    },
+    {
+      "StartupMs": 896.3803,
+      "WorkflowMs": 0.8154,
+      "CpuMs": 312.5,
+      "PeakBytes": 19398656
+    },
+    {
+      "StartupMs": 466.57050000000004,
+      "WorkflowMs": 1.1745,
+      "CpuMs": 234.375,
+      "PeakBytes": 19410944
+    },
+    {
+      "StartupMs": 948.0722000000001,
+      "WorkflowMs": 1.0079,
+      "CpuMs": 343.75,
+      "PeakBytes": 19394560
+    }
+  ],
+  "Candidate": [
+    {
+      "StartupMs": 409.6745,
+      "WorkflowMs": 1.9921000000000002,
+      "CpuMs": 328.125,
+      "PeakBytes": 18915328
+    },
+    {
+      "StartupMs": 509.8899,
+      "WorkflowMs": 2.2560000000000002,
+      "CpuMs": 343.75,
+      "PeakBytes": 18939904
+    },
+    {
+      "StartupMs": 380.3466,
+      "WorkflowMs": 1.8588,
+      "CpuMs": 281.25,
+      "PeakBytes": 18931712
+    },
+    {
+      "StartupMs": 433.5839,
+      "WorkflowMs": 1.587,
+      "CpuMs": 296.875,
+      "PeakBytes": 18935808
+    },
+    {
+      "StartupMs": 404.4888,
+      "WorkflowMs": 1.046,
+      "CpuMs": 375,
+      "PeakBytes": 18931712
+    }
+  ],
+  "ControlShapePass": true,
+  "DebugStartupAndNormalClose": "PASS",
+  "CommonFileDialog": "NOT RUN: no enabled file-dialog workflow in the disconnected initial page",
+  "InitialTimingGate": null,
+  "TimingDisposition": "Initial completed valid timing run passed.",
+  "ActualClean": {
+    "Removed": 34,
+    "Protected": 2,
+    "NestedFixtures": 17,
+    "RootIniHashesUnchanged": true
+  },
+  "Security": "PE 0x8160; static runtime and /O2 /GL /MT /GS retained; VisualManager RTTI absent",
+  "Scope": "Unused x64 MFC control registration only; no application/protocol changes.",
+  "NotRun": [
+    "Physical-device/protocol throughput",
+    "Visual/DPI acceptance",
+    "Clean-PC",
+    "Win32",
+    "Unrelated firmware"
+  ],
+  "Publication": "Existing origin only; EXE is untracked/ignored and is NOT force-added"
+}

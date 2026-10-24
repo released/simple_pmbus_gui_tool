@@ -1,5 +1,21 @@
 # HANDOFF.md
 
+## Verified x64 EXE slimming 2026-10-25
+
+- EXE 2850816 -> 729088 bytes; formal SHA
+  7322BB0AF031F3728C9D3257E0B6A3D53F5C8166F26EE5BC1121CF06A8E1ACDB.
+- Release x64 canonical build and isolated Debug PASS; controls/UI dispatch (no file-dialog workflow),
+  matching child-control counts and normal exit 0 PASS. 5 AB/BA pairs PASS.
+- Initial dialog-test IDs 1022/13161 were invalid for this dashboard UI; those
+  failures were test configuration errors. The active dashboard has no corresponding
+  disconnected file-load control. Final startup/control/Debug checks omit that test.
+- Actual clean removed 34 compiler files; 2 protected actual files SHA
+  unchanged. 17 nested fixture files/source, help/idempotence and root INI hashes PASS.
+- EXE was already ignored/untracked; publication includes code/docs, not a force-added binary.
+- Raw sanitized evidence: docs/verification/exe-slimming-20261025.json.
+  Physical devices, unrelated firmware, visual/DPI/clean-PC/Win32 NOT RUN.
+
+
 ## Layout / Clean Audit 2026-10-20
 
 - Existing source layout already conforms; no application/protocol/firmware restructuring or dependencies were introduced.

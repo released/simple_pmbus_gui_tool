@@ -4,6 +4,17 @@ Native Windows MFC PMBus dashboard for end users.
 
 The tool connects to an M032 EVB USB HID bridge, uses the EVB I2C controller as a PMBus master, and displays decoded PMBus/M-CRPS read-only values in a dashboard UI.
 
+## Release EXE size reduction (2026-10-25)
+
+Release x64 EXE: 2,850,816 -> 729,088 bytes.
+Unused MFC control registration is excluded; static runtime, security and device
+features remain.
+Isolated startup/controls/Debug/normal-close and 5 paired performance samples
+passed. Physical-device, visual/DPI and clean-PC acceptance are not claimed.
+The native EXE remains a local ignored output; it is not newly uploaded.
+See SELF_CHECK.md and docs/verification/exe-slimming-20261025.json for evidence.
+
+
 ## Layout And Safe Clean
 
 Application source remains in `src`, automation in `scripts`, supporting guides
