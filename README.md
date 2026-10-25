@@ -4,30 +4,11 @@ Native Windows MFC PMBus dashboard for end users.
 
 The tool connects to an M032 EVB USB HID bridge, uses the EVB I2C controller as a PMBus master, and displays decoded PMBus/M-CRPS read-only values in a dashboard UI.
 
-## Release EXE size reduction (2026-10-25)
-
-Release x64 EXE: 2,850,816 -> 729,088 bytes.
-Unused MFC control registration is excluded; static runtime, security and device
-features remain.
-Isolated startup/controls/Debug/normal-close and 5 paired performance samples
-passed. Physical-device, visual/DPI and clean-PC acceptance are not claimed.
-The native EXE remains a local ignored output; it is not newly uploaded.
-See SELF_CHECK.md and docs/verification/exe-slimming-20261025.json for evidence.
-
-
-## Layout And Safe Clean
-
-Application source remains in `src`, automation in `scripts`, supporting guides
-in `docs`, and delivery/runtime files in `build`. Existing firmware/vendor
-trees retain their working paths. `scripts/clean_mfc.bat` removes allowlisted
-compiler files only, rejects reparse-point traversal before deletion, and
-retains EXE/INI/DLL/data/log/unknown files even inside nested output folders.
-A folder name such as `tests` or `obj` is not permission to erase its contents.
 
 ## Current Scope
 
-- Primary verified bridge board: M032 EVB running the existing PMBus/SMBus HID bridge firmware.
-- Staged bridge board firmware: M261 EVB / M263KIAAE reference firmware is present under `demo_code\M261BSP_USB_HID_PMBus_SMBus` with HID IAP bootloader, application checksum post-build, and M261 I2C backend for follow-up hardware validation.
+- Primary bridge board: M032 EVB running the PMBus/SMBus HID bridge firmware.
+- M261 EVB / M263KIAAE reference firmware is under `demo_code\M261BSP_USB_HID_PMBus_SMBus`, with HID IAP bootloader, application checksum post-build and an M261 I2C backend. M261 hardware operation is not production-verified.
 - Target bus role: PMBus master only.
 - UI flow: scan USB, connect HID bridge, press `Start`, poll and display values.
 - Main dashboard: M-CRPS 12V output voltage/current/power, RPM, VIN/PIN/POUT, temperatures, protection thresholds, status, identity, and MFR fields.
@@ -42,7 +23,7 @@ Out of V1 scope:
 
 ## Bridge Firmware
 
-This workspace now carries the same bridge firmware source layout used by `simple_pmbus_smbus_tool`:
+Bridge firmware sources:
 
 - M031/M032 bridge firmware: `demo_code\M031BSP_USB_HID_PMBus_SMBus`
 - M261 staged bridge firmware: `demo_code\M261BSP_USB_HID_PMBus_SMBus`
@@ -70,7 +51,7 @@ The top-level GUI includes `Return Bootloader`. It sends `BRIDGE_CMD_ENTER_IAP` 
 
 The V1 M-CRPS dashboard keeps PMBus `PAGE` handling profile-neutral. Page-specific output display should be enabled only after a product profile defines the page-to-output mapping.
 
-For first M261 validation, use the default `I2C0 PB.4=SDA / PB.5=SCL` pin pair. The M261 firmware backend follows the `simple_pmbus_smbus_tool` M261 pin support; a dedicated GUI board profile selector is still a follow-up item for this dashboard tool.
+For M261, use the default `I2C0 PB.4=SDA / PB.5=SCL` pin pair. The firmware backend follows the M261 pin support in `simple_pmbus_smbus_tool`; this dashboard has no dedicated board-profile selector.
 
 ## Polling Commands
 
@@ -117,7 +98,7 @@ Static/detail refresh runs on cycle 1 and then every 30 cycles:
 
 ## M031BSP Target Alignment
 
-The default GUI settings are aligned with `D:\SourceCode\_Avery_M031\M031BSP_I2C_Slave_PMBus`:
+The default GUI settings match the `M031BSP_I2C_Slave_PMBus` reference target:
 
 - Target address `0x5A`
 - I2C speed `400000`
@@ -138,24 +119,11 @@ Expected output:
 build\PmbusGuiTool.exe
 ```
 
-## Validation
+## Quick Start
 
-Contract validation:
+1. Connect and scan the M032 USB HID bridge, then select the target settings.
+2. Press `Start` to initialize I2C and poll the dashboard. Start requires a connected bridge.
+3. Read the dynamic values and detail tabs; target-dependent fields may be unavailable.
+4. Press `Stop` to stop polling before disconnecting.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate_pmbus_contract.ps1
-```
-
-Smoke without target:
-
-1. Launch `build\PmbusGuiTool.exe`.
-2. Confirm the main window opens.
-3. Confirm `Start` is disabled/blocked until a HID bridge is connected.
-4. Close the tool cleanly.
-
-Hardware smoke with M032 EVB and target:
-
-1. Scan and connect the M032 bridge.
-2. Press `Start`.
-3. Confirm I2C initializes and dashboard values update.
-4. Press `Stop` and verify polling stops without freezing the UI.
+Run `scripts/clean_mfc.bat` for compiler cleanup; executable/settings/data files remain.
