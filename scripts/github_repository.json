@@ -1,0 +1,12 @@
+{
+  "publication_enabled": true,
+  "repository": "released/simple_pmbus_gui_tool",
+  "visibility": "PUBLIC",
+  "branch": "main",
+  "readme_title": "PMBus GUI tool",
+  "identity_files": [
+    "README.md",
+    "PmbusGuiTool.vcxproj"
+  ],
+  "delivery_files": []
+}

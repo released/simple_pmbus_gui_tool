@@ -1,4 +1,5 @@
 #include "main_frame.h"
+#include "tool_build_identity.h"
 
 #include <afxdlgs.h>
 
@@ -121,6 +122,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct) {
     if (CFrameWnd::OnCreate(lpCreateStruct) == -1) {
         return -1;
     }
+    if (!build_identity_.Create(m_hWnd, TOOL_BUILD_VERSION_W, TOOL_BUILD_DISPLAY_TIME_W,
+                                TOOL_BUILD_TIMESTAMP_ISO_W)) return -1;
 
     current_dpi_ = mfc_tool::ui::GetDpiForWnd(*this);
     RecreateUiFont();
@@ -279,6 +282,9 @@ void CMainFrame::LayoutControls(int cx, int cy) {
     const mfc_tool::ui::LayoutMetrics m = mfc_tool::ui::MetricsForWindow(*this);
     const mfc_tool::ui::DpiScaler dpi(current_dpi_ != 0u ? current_dpi_ : mfc_tool::ui::GetDpiForWnd(*this));
     const int margin = m.margin8;
+    build_identity_.SetFont(reinterpret_cast<HFONT>(ui_font_.GetSafeHandle()));
+    build_identity_.Place(cx - margin, margin, (std::max)(0, cx - margin * 2));
+    const int header_height = build_identity_.Height() + margin;
     const int gap = m.gap;
     const int row_h = m.row26;
     const int label_y_pad = dpi.Scale(4);
@@ -291,7 +297,7 @@ void CMainFrame::LayoutControls(int cx, int cy) {
     const int return_w = (std::max)(btn_w + dpi.Scale(36), mfc_tool::ui::MeasureButtonMinWidth(return_bootloader_btn_));
     const int status_min_w = dpi.Scale(120);
     int x = margin;
-    int y = margin;
+    int y = margin + header_height;
 
     mfc_tool::ui::SafeMoveWindow(scan_btn_, x, y, btn_w + dpi.Scale(16), row_h);
     x += btn_w + dpi.Scale(16) + gap;
@@ -345,6 +351,8 @@ void CMainFrame::LayoutControls(int cx, int cy) {
     mfc_tool::ui::SafeMoveWindow(log_edit_, margin, log_y, cx - margin * 2, cy - log_y - margin);
     mfc_tool::ui::SafeMoveWindow(tab_ctrl_, margin, top_h, cx - margin * 2, (std::max)(dpi.Scale(120), log_btn_y - top_h - gap));
     ShowActiveTabPage();
+    build_label_.ShowWindow(SW_HIDE);
+    build_value_.ShowWindow(SW_HIDE);
 }
 
 void CMainFrame::InitializeTabs() {
